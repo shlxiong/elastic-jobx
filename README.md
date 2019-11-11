@@ -7,35 +7,38 @@
 [![GitHub release](https://img.shields.io/github/release/elasticjob/elastic-job.svg)](https://github.com/elasticjob/elastic-job/releases)
 [![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
 
-# [Homepage](http://elasticjob.io/)
-
 # [中文主页](http://elasticjob.io/index_zh.html)
 
 # Elastic-Job-Lite Console [![GitHub release](https://img.shields.io/badge/release-download-orange.svg)](https://elasticjob.io/dist/elastic-job-lite-console-2.1.5.tar.gz)
 
-# Overview
+# 修改点
 
-Elastic-Job is a distributed scheduled job solution. Elastic-Job is composited from 2 independent sub projects: Elastic-Job-Lite and Elastic-Job-Cloud.
+* Namespace增加了一层"elastic-job/{APP_NAME}"/{JOB_NAME}，同步修改elastic-job-lite-console模块
+* 重写了调用事件的日志，增加两个Status（prepare、clean），并设置一个启用开关: allowSendEvent
+     当本机没有分片时，不生成TaskInfo和日志信息
+* 新增一种分片策略，避免只有一个分片时，多个任务尽量分布到多台机器
+* 增加Job启动的初始状态-失效，避免一开始就触发任务
+* Listener瘦身：将ZooKeeper监听器下移；单例
+* 管理控制台：
+     使用Spring单例
+     使用autoconfig替代全局配置 ${user.home}/.elastic-job/configurations.xml
+     bug-fix：当有服务器shutdown，且其他均disable时，作业状态显示为:"分片待调整"，而实际应该是:"已失效"
+     校验Quartz表达式
 
-Elastic-Job-Lite is a centre-less solution, use lightweight jar to coordinate distributed jobs.
+# 特性
 
-Elastic-Job-Lite and Elastic-Job-Cloud provide unified API. Developers only need code one time, then decide to deploy Lite or Cloud as you want.
+* 作业注册中心：基于Zookeeper和其客户端Curator实现的全局作业注册控制中心。用于注册，控制和协调分布式作业执行。
+* 作业分片：将一个任务（按IP）分片成为多个小任务项在多服务器上同时执行。
+* 弹性扩容缩容：在作业运行中，服务器崩溃或新增加n台作业服务器，将在下次作业执行前重新分片，不影响当前作业执行。
+* 失效转移：在本次作业执行过程中，监测其他作业服务器空闲，抓取未完成的孤儿分片项执行。
+* 运行时状态收集：监控作业运行时状态，统计最近一段时间处理的数据成功和失败数量，记录作业上次运行开始时间，结束时间和下次运行时间。
+* 作业停止，恢复和禁用：用于操作作业启停，并可以禁止某作业运行（上线时常用）。
+* 被错过执行的作业重触发：自动记录错过执行的作业，并在上次作业完成后自动触发。
+* 多线程快速处理数据，提升吞吐量。
+* 幂等性：开启monitorExecution会做作业重复行判定。（不推荐）会对性能有较大影响。
+* 容错处理：作业服务器与Zookeeper服务器通信失败则立即停止作业运行，防止将失效的分片分项配给其他作业服务器，导致重复执行。
 
-# Features
-
-* Distributed schedule job coordinate
-* Elastic scale in and scale out supported
-* Failover
-* Misfired jobs refire
-* Sharding consistently, same sharding item for a job only one running instance
-* Self diagnose and recover when distribute environment unstable
-* Parallel scheduling supported
-* Job lifecycle operation
-* Lavish job types
-* Spring integrated and namespace supported
-* Web console
-
-# Architecture
+# 架构
 
 ## Elastic-Job-Lite
 
