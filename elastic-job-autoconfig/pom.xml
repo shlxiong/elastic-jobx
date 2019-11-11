@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.openxsl</groupId>
+        <artifactId>autoconfig</artifactId>
+        <version>1.2</version>
+    </parent>
+    
+    <artifactId>elastic-job-autoconfig</artifactId>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
+    
+    <dependencies>
+        <dependency>
+        	<groupId>com.openxsl</groupId>
+            <artifactId>xsl-autoconfig-dal</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.dangdang</groupId>
+            <artifactId>elastic-job-lite-core</artifactId>
+            <version>2.1.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+        </dependency>
+        <dependency> <!-- eventlog disable tracing -->
+		  	<groupId>com.openxsl</groupId>
+		  	<artifactId>druid-plugin</artifactId>
+		  	<version>1.1.5.beta</version>
+		  	<scope>provided</scope>
+		</dependency>
+        
+        <dependency>
+		    <groupId>org.hibernate.javax.persistence</groupId>
+		    <artifactId>hibernate-jpa-2.1-api</artifactId>
+		    <version>1.0.2.Final</version>
+		</dependency>
+		
+		<!-- <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.1.5</version>
+        </dependency> -->
+		<dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>provided</scope>
+        </dependency>
+		<dependency>
+		  	<groupId>ojdbc</groupId>
+		  	<artifactId>ojdbc</artifactId>
+		 	<version>6</version>
+		 	<scope>provided</scope>
+		</dependency>
+        
+        <dependency>
+        	<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+        </dependency>
+        <!-- <dependency>
+	        <groupId>com.openxsl</groupId>
+	        <artifactId>xsl-autoconfig-trace</artifactId>
+	        <version>${project.parent.version}</version>
+	        <scope>test</scope>
+        </dependency>
+        <dependency>
+			<groupId>com.openxsl</groupId>
+            <artifactId>trace-api</artifactId>
+		    <version>1.0-SNAPSHOT</version>
+		    <scope>test</scope>
+        </dependency> -->
+        
+    </dependencies>
+    
+    <build>
+        <resources>
+            <resource>
+               <directory>src/main/resources</directory>
+               <excludes>
+                   <exclude>assembly/*</exclude>
+                   <exclude>bin/*</exclude>
+               </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/main/resources/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assembly</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
