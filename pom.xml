@@ -22,7 +22,7 @@
 		<project.build.locale>zh_CN</project.build.locale>
         <elasticjob.version>${project.version}</elasticjob.version>
 
-		<springframework.version>4.3.10.RELEASE</springframework.version>
+		<springframework.version>5.2.20.RELEASE</springframework.version>
 
 		<lombok.version>1.16.4</lombok.version>
 		<guava.version>18.0</guava.version>
